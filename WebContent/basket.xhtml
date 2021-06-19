@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="primeflex.css" />
+</h:head>
+<f:view>
+	<f:metadata>
+		<f:viewAction
+			action="#{clientsView.checkNull(clientsView.client.name)}" />
+	</f:metadata>
+	<body>
+		<p:growl id="messages" showDetail="true" life="2000" />
+
+		<h:form id="form">
+
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+			<div class="card">
+				<p:menubar>
+					<p:menuitem value="Ana Sayfa"
+						action="homepage.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-home" />
+					<p:menuitem value="Kategoriler"
+						action="category.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Hakımızda" icon="pi pi-fw pi-info-circle" />
+
+
+					<p:menuitem style="margin-left:100px;width:500px;">
+						<div class="p-col-12 p-md-4">
+							<div class="ui-inputgroup" style="width: 500px;">
+								<p:inputText placeholder="Ürün ara" value="#{searchView.search}"
+									style="width:425px;" />
+								<p:commandButton icon="pi pi-search"
+									action="#{searchView.search()}" styleClass="ui-button-warning"
+									style="width:40px;" />
+							</div>
+						</div>
+					</p:menuitem>
+
+					<f:facet name="options">
+						<p:button icon="pi pi-shopping-cart" outcome="basket.xhtml"
+							styleClass="ui-button-info" style="margin:5px;" />
+						<p:button value="Giriş Yap" icon="pi pi-fw pi-sign-in"
+							styleClass="ui-button-info" outcome="login.xhtml"
+							rendered="#{clientsView.client.name == null}" />
+
+
+					</f:facet>
+					<p:submenu icon="pi pi-user" styleClass=""
+						label="#{clientsView.client.name} #{clientsView.client.surName}"
+						style="float:right" rendered="#{clientsView.client.name != null}">
+						<p:menuitem value="Bilgilerimi düzenle" icon="pi pi-user-edit" />
+						<p:menuitem value="Siparişlerim"
+							action="orders.xhtml?faces-redirect=true" icon="pi pi-tags" />
+						<p:menuitem value="Çıkış yap"
+							action="#{clientsView.logoutControl()}" update="messages form"
+							process="@this" icon="pi pi-fw pi-sign-out" />
+					</p:submenu>
+
+				</p:menubar>
+			</div>
+			<hr size="10" style="background-color: Black;" />
+
+			<p:dataView id="dataview" var="basket"
+				value="#{basketView.findBasket(clientsView.client)}" rows="12"
+				paginator="true"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				gridIcon="pi pi-th-large" listIcon="pi pi-bars" layout="grid"
+				gridRowStyleClass="p-lg-6 p-xl-4" flex="true">
+
+
+
+				<p:dataViewGridItem>
+					<center>
+						<div class="product-grid-item card border-1">
+							<div class="product-grid-item-top">
+								<div>
+									<i class="pi pi-tag product-category-icon" /> <span
+										class="product-category">#{basket.product.category.categoryName}
+									</span>
+								</div>
+							</div>
+						</div>
+						<div class="product-grid-item-content">
+							<p:graphicImage value="#{basket.product.photo}" stream="false"
+								style="width:150px;height:150px;" />
+							<div class="product-name">#{basket.product.productName}</div>
+							<div class="product-description">#{basket.product.pcsUnit}</div>
+							<h:outputText value="#{basket.product.salePrice} ₺"
+								styleClass="product-price">
+							</h:outputText>
+
+						</div>
+						<div class="product-grid-item-bottom">
+							<p:panelGrid columns="3" styleClass="ui-noborder">
+								<p:commandButton styleClass="ui-button-flat"
+									action="#{basketView.quantityDEC(basket.product,clientsView.client)}"
+									update="form messages"
+									style="font-weight:lighter;font-size:large;font-family:Times New Roman TUR;border-color:Blue;border-width:medium;font-style:italic;border-style:double;text-align:center;"
+									icon="pi pi-minus" />
+								<h:outputText value="#{basket.quantity}" />
+								<p:commandButton styleClass="ui-button-flat"
+									action="#{basketView.quantityINC(basket.product,clientsView.client)}"
+									update="form messages"
+									style="font-weight:lighter;font-size:large;font-family:Times New Roman TUR;border-color:Blue;border-width:medium;font-style:italic;border-style:double;text-align:center;"
+									icon="pi pi-plus" />
+							</p:panelGrid>
+							<p:commandButton styleClass="ui-button-outlined ui-button-danger"
+								update="form" icon="pi pi-trash"
+								action="#{basketView.remove(basket.product,clientsView.client)}" />
+						</div>
+					</center>
+				</p:dataViewGridItem>
+			</p:dataView>
+			<center>
+				<p:commandButton styleClass="ui-button-raised ui-button-help"
+					action="#{basketView.toOrder(clientsView.client)}"
+					update="form messages" icon="pi pi-check-square"
+					value="Sipariş Ver" style="margin-top:30px;" />
+			</center>
+		</h:form>
+
+	</body>
+</f:view>
+</html>

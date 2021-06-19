@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+ <managed-bean>
+  <managed-bean-name>imagesView</managed-bean-name>
+  <managed-bean-class>images.ImagesView</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>managerView</managed-bean-name>
+  <managed-bean-class>com.marketim.View.ManagerView</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>courierView</managed-bean-name>
+  <managed-bean-class>com.marketim.View.CourierView</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>categoryView</managed-bean-name>
+  <managed-bean-class>com.marketim.View.CategoryView</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>clientsView</managed-bean-name>
+  <managed-bean-class>com.marketim.View.ClientsView</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean eager="true">
+  <managed-bean-name>productView</managed-bean-name>
+  <managed-bean-class>com.marketim.View.ProductView</managed-bean-class>
+  <managed-bean-scope>view</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>searchView</managed-bean-name>
+  <managed-bean-class>com.marketim.View.SearchView</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>basketView</managed-bean-name>
+  <managed-bean-class>com.marketim.View.BasketView</managed-bean-class>
+  <managed-bean-scope>view</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>orderInfoView</managed-bean-name>
+  <managed-bean-class>com.marketim.View.OrderInfoView</managed-bean-class>
+  <managed-bean-scope>session</managed-bean-scope>
+ </managed-bean>
+ <managed-bean>
+  <managed-bean-name>orderDetailView</managed-bean-name>
+  <managed-bean-class>com.marketim.View.OrderDetailView</managed-bean-class>
+  <managed-bean-scope>request</managed-bean-scope>
+ </managed-bean>
+ <application/>
+</faces-config>

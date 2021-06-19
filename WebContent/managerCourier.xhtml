@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="primeflex.css" />
+</h:head>
+<f:view>
+	<f:metadata>
+		<f:viewAction
+			action="#{managerView.checkNull(managerView.manager.name)}" />
+	</f:metadata>
+	<body>
+		<p:growl id="messages" showDetail="true" life="1000" />
+		<h:form id="form">
+
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+
+			<div class="card">
+				<p:menubar>
+					<p:menuitem value="Ana Sayfa"
+						action="managerHomepage.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-home" />
+					<p:menuitem value="Kategori İşlemleri"
+						action="managerCategory.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Ürün İşlemleri"
+						action="managerProduct.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Kurye İşlemleri"
+						action="managerCourier.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Satış İşlemleri"
+						action="managerSales.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+
+					<f:facet name="options">
+					</f:facet>
+					<p:submenu icon="pi pi-user" styleClass=""
+						label="#{managerView.manager.name} #{managerView.manager.surName}"
+						style="float:right" rendered="#{managerView.manager.name != null}">
+						<p:menuitem value="Bilgilerimi düzenle"
+							action="editProfileM.xhtml?faces-redirect=true"
+							icon="pi pi-user-edit" />
+						<p:menuitem value="Çıkış yap"
+							action="#{managerView.logoutControl()}" update="messages form"
+							process="@this" icon="pi pi-fw pi-sign-out" />
+					</p:submenu>
+
+				</p:menubar>
+			</div>
+			<hr size="10" style="background-color: Black;" />
+
+
+			<div class="card crud-demo">
+
+				<p:toolbar>
+					<p:toolbarGroup>
+						<p:commandButton value="Yeni" icon="pi pi-plus"
+							actionListener="#{courierView.openNew()}"
+							update=":form:manage-product-content"
+							oncomplete="PF('manageProductDialog').show()"
+							styleClass="ui-button-success" style="margin-right: .5rem">
+							<p:resetInput target=":form:manage-product-content" />
+						</p:commandButton>
+					</p:toolbarGroup>
+				</p:toolbar>
+
+				<p:dataTable id="dt-courier" widgetVar="dtCourier" var="courier"
+					value="#{courierView.list()}" reflow="true"
+					styleClass="products-table" paginator="true" rows="10"
+					rowSelectMode="add" paginatorPosition="bottom">
+
+					<p:column headerText="İd" sortBy="#{courier.id}"
+						filterBy="#{courier.id}">
+						<h:outputText value="#{courier.id}" />
+					</p:column>
+					<p:column headerText="Kurye adı" sortBy="#{courier.name}"
+						filterBy="#{courier.name}">
+						<h:outputText value="#{courier.name}" />
+					</p:column>
+					<p:column headerText="Kurye soyadı" sortBy="#{courier.surName}"
+						filterBy="#{courier.surName}">
+						<h:outputText value="#{courier.surName}" />
+					</p:column>
+					<p:column headerText="Telefon numarası"
+						sortBy="#{courier.telephoneNumber}"
+						filterBy="#{courier.telephoneNumber}">
+						<h:outputText value="#{courier.telephoneNumber}" />
+					</p:column>
+					<p:column headerText="E-posta" sortBy="#{courier.email}"
+						filterBy="#{courier.email}">
+						<h:outputText value="#{courier.email}" />
+					</p:column>
+					<p:column headerText="Parola" sortBy="#{courier.password}"
+						filterBy="#{courier.surName}">
+						<h:outputText value="#{courier.password}" />
+					</p:column>
+
+					<p:column>
+						<p:commandButton icon="pi pi-pencil"
+							update=":form:manage-product-content"
+							oncomplete="PF('manageProductDialog').show()"
+							styleClass="edit-button rounded-button ui-button-success"
+							process="@this">
+							<f:setPropertyActionListener value="#{courier}"
+								target="#{courierView.courier}" />
+							<p:resetInput target=":form:manage-product-content" />
+						</p:commandButton>
+						&nbsp;
+						<p:commandButton class="ui-button-danger rounded-button"
+							icon="pi pi-trash" process="@this"
+							oncomplete="PF('deleteCourierDialog').show()">
+							<f:setPropertyActionListener value="#{courier}"
+								target="#{courierView.courier}" />
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+
+				<p:dialog header="Kurye Bilgileri" showEffect="fade" modal="true"
+					widgetVar="manageProductDialog" responsive="true">
+					<p:outputPanel id="manage-product-content" class="ui-fluid">
+						<p:outputPanel style="height:500px;"
+						rendered="#{courierView.courier.name!=null}">
+							<div class="p-field">
+								<p:outputLabel for="name">Adı</p:outputLabel>
+								<p:inputText id="name" value="#{courierView.courier.name}"
+									required="true" />
+							</div>
+							<div class="p-field">
+								<p:outputLabel for="surname">Soyadı</p:outputLabel>
+								<p:inputText id="surname" value="#{courierView.courier.surName}"
+									required="true" />
+							</div>
+							<div class="p-field">
+								<p:outputLabel for="tlphn">Telefon numarası</p:outputLabel>
+								<p:inputText id="tlphn"
+									value="#{courierView.courier.telephoneNumber}" required="true" />
+							</div>
+							<div class="p-field">
+								<p:outputLabel for="email">E-posta</p:outputLabel>
+								<p:inputText id="email" value="#{courierView.courier.email}"
+									required="true" />
+							</div>
+							<div class="p-field">
+								<p:outputLabel for="pswrd">Parola</p:outputLabel>
+								<p:inputText id="pswrd" value="#{courierView.courier.password}"
+									required="true" />
+							</div>
+
+						</p:outputPanel>
+					</p:outputPanel>
+
+					<f:facet name="footer">
+						<p:commandButton value="Kaydet" icon="pi pi-check"
+							actionListener="#{courierView.save}" update="form messages"
+							oncomplete="PF('manageProductDialog').hide()"
+							process="manage-product-content @this" />
+						<p:commandButton value="İptal" icon="pi pi-times"
+							onclick="PF('manageProductDialog').hide()"
+							class="ui-button-secondary" />
+					</f:facet>
+				</p:dialog>
+
+				<p:confirmDialog widgetVar="deleteCourierDialog" showEffect="fade"
+					width="300" message="Kuryeyi Silmek İstiyor musunuz?"
+					header="Onay" severity="warn">
+					<p:commandButton value="Evet" icon="pi pi-check"
+						actionListener="#{courierView.remove()}" process="@this"
+						oncomplete="PF('deleteCourierDialog').hide()"
+						update="form messages" />
+					<p:commandButton value="Hayır" type="button"
+						styleClass="ui-button-secondary" icon="pi pi-times"
+						onclick="PF('deleteCourierDialog').hide()" />
+				</p:confirmDialog>
+
+			</div>
+		</h:form>
+	</body>
+</f:view>
+</html>

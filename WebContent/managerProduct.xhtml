@@ -1,0 +1,224 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="primeflex.css" />
+</h:head>
+<f:view>
+	<f:metadata>
+		<f:viewAction
+			action="#{managerView.checkNull(managerView.manager.name)}" />
+	</f:metadata>
+	<body>
+		<p:growl id="messages" showDetail="true" life="1000" />
+		<h:form id="form">
+
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+
+			<div class="card">
+				<p:menubar>
+					<p:menuitem value="Ana Sayfa"
+						action="managerHomepage.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-home" />
+					<p:menuitem value="Kategori İşlemleri"
+						action="managerCategory.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Ürün İşlemleri"
+						action="managerProduct.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Kurye İşlemleri"
+						action="managerCourier.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Satış İşlemleri"
+						action="managerSales.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+
+					<f:facet name="options">
+					</f:facet>
+					<p:submenu icon="pi pi-user" styleClass=""
+						label="#{managerView.manager.name} #{managerView.manager.surName}"
+						style="float:right" rendered="#{managerView.manager.name != null}">
+						<p:menuitem value="Bilgilerimi düzenle"
+							action="editProfileM.xhtml?faces-redirect=true"
+							icon="pi pi-user-edit" />
+						<p:menuitem value="Çıkış yap"
+							action="#{managerView.logoutControl()}" update="messages form"
+							process="@this" icon="pi pi-fw pi-sign-out" />
+					</p:submenu>
+
+				</p:menubar>
+			</div>
+			<hr size="10" style="background-color: Black;" />
+
+
+			<div class="card crud-demo">
+
+				<p:toolbar>
+					<p:toolbarGroup>
+						<p:commandButton value="Yeni" icon="pi pi-plus"
+							actionListener="#{productView.openNew()}"
+							update=":form:manage-product-content"
+							oncomplete="PF('manageProductDialog').show()"
+							styleClass="ui-button-success" style="margin-right: .5rem">
+							<p:resetInput target=":form:manage-product-content" />
+						</p:commandButton>
+					</p:toolbarGroup>
+				</p:toolbar>
+
+				<p:dataTable id="dt-product" widgetVar="dtProduct" var="product"
+					value="#{productView.list()}" reflow="true"
+					styleClass="products-table" paginator="true" rows="10"
+					rowSelectMode="add" paginatorPosition="bottom">
+
+					<p:column headerText="İd" sortBy="#{product.id}"
+						filterBy="#{product.id}">
+						<h:outputText value="#{product.id}" />
+					</p:column>
+					<p:column headerText="Ürün adı" sortBy="#{product.productName}"
+						filterBy="#{product.productName}">
+						<h:outputText value="#{product.productName}" />
+					</p:column>
+					<p:column headerText="Birimi" sortBy="#{product.pcsUnit}"
+						filterBy="#{product.pcsUnit}">
+						<h:outputText value="#{product.pcsUnit}" />
+					</p:column>
+					<p:column headerText="Fotoğrafı">
+						<p:graphicImage value="#{product.photo}" stream="false"
+							style="width:75px;height:75px;" />
+					</p:column>
+					<p:column headerText="Satış Fiyatı" sortBy="#{product.salePrice}">
+						<h:outputText value="#{product.salePrice} ₺"
+							style="font-weight: 700">
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Maliyet Fiyatı"
+						sortBy="#{product.costOfProduct}">
+						<h:outputText value="#{product.costOfProduct} ₺"
+							style="font-weight: 700">
+						</h:outputText>
+					</p:column>
+					<p:column headerText="Kategori"
+						sortBy="#{product.category.categoryName}"
+						filterBy="#{product.category.categoryName}">
+						<h:outputText value="#{product.category.categoryName}" />
+					</p:column>
+					<p:column headerText="Stok Adedi" sortBy="#{product.stock}">
+						<h:outputText value="#{product.stock}" />
+					</p:column>
+					<p:column>
+						<p:commandButton icon="pi pi-pencil"
+							update=":form:manage-product-content"
+							oncomplete="PF('manageProductDialog').show()"
+							styleClass="edit-button rounded-button ui-button-success"
+							process="@this">
+							<f:setPropertyActionListener value="#{product}"
+								target="#{productView.product}" />
+							<p:resetInput target=":form:manage-product-content" />
+						</p:commandButton>
+						&nbsp;
+						<p:commandButton class="ui-button-danger rounded-button"
+							icon="pi pi-trash" process="@this"
+							oncomplete="PF('deleteProductDialog').show()">
+							<f:setPropertyActionListener value="#{product}"
+								target="#{productView.product}" />
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+
+				<p:dialog header="Ürün Detayları" showEffect="fade" modal="true"
+					widgetVar="manageProductDialog" responsive="true">
+					<p:outputPanel id="manage-product-content" class="ui-fluid">
+						<p:outputPanel style="height:500px;"
+							rendered="#{productView.product.productName!=null}">
+							<p:fileUpload value="#{productView.file}" mode="simple"
+								skinSimple="true" auto="true" process="@this"
+								update="messages :form:manage-product-content"
+								listener="#{productView.handleFileUpload}" label="Resim Seç" />
+							<center>
+								<p:graphicImage value="#{productView.product.photo}"
+									stream="false" style="width:150px;height:150px;" />
+							</center>
+							<div class="p-field">
+								<p:outputLabel for="name">Ürün Adı</p:outputLabel>
+								<p:inputText id="name"
+									value="#{productView.product.productName}" required="true" />
+							</div>
+
+							<div class="p-field">
+								<p:outputLabel for="pcs">Birimi</p:outputLabel>
+								<p:inputText id="pcs" value="#{productView.product.pcsUnit}"
+									required="true" />
+							</div>
+							<div class="p-formgrid p-grid">
+								<div class="p-field p-col">
+									<p:outputLabel for="slsprc">Satış Fiyatı</p:outputLabel>
+									<p:inputNumber id="slsprc"
+										value="#{productView.product.salePrice}" symbol=" TL"
+										symbolPosition="s" decimalSeparator="." thousandSeparator=","
+										required="true" />
+								</div>
+								<div class="p-field p-col">
+									<p:outputLabel for="cost">Maliyet Fiyatı</p:outputLabel>
+									<p:inputNumber id="cost"
+										value="#{productView.product.costOfProduct}" symbol=" TL"
+										symbolPosition="s" decimalSeparator="." thousandSeparator=","
+										required="true" />
+								</div>
+							</div>
+							<div class="p-field">
+								<p:outputLabel for="category">Kategori</p:outputLabel>
+								<p:selectOneRadio id="category"
+									value="#{productView.cid}" layout="responsive"
+									columns="2" required="true">
+									<f:selectItems value="#{productView.clist()}" var="category" itemValue="#{category.id}" itemLabel="#{category.categoryName}" />
+								</p:selectOneRadio>
+							</div>
+
+							<div class="p-field">
+								<p:outputLabel for="quantity">Stok Adedi</p:outputLabel>
+
+								<p:inputNumber id="quantity"
+									value="#{productView.product.stock}" symbol=" Adet"
+									symbolPosition="s" thousandSeparator="" decimalSeparator="."
+									decimalPlaces="0" required="true" minValue="0" />
+							</div>
+
+						</p:outputPanel>
+					</p:outputPanel>
+					<f:facet name="footer">
+						<p:commandButton value="Kaydet" icon="pi pi-check"
+							actionListener="#{productView.save}" update="messages form"
+							oncomplete="PF('manageProductDialog').hide()"
+							process="manage-product-content @this" />
+						<p:commandButton value="İptal" icon="pi pi-times"
+							onclick="PF('manageProductDialog').hide()"
+							class="ui-button-secondary" />
+					</f:facet>
+				</p:dialog>
+
+
+
+				<p:confirmDialog widgetVar="deleteProductDialog" showEffect="fade"
+					width="300" message="Kategoriyi Silmek İstiyor musunuz?"
+					header="Onay" severity="warn">
+					<p:commandButton value="Evet" icon="pi pi-check"
+						actionListener="#{productView.remove()}" process="@this"
+						oncomplete="PF('deleteProductDialog').hide()"
+						update="form messages" />
+					<p:commandButton value="Hayır" type="button"
+						styleClass="ui-button-secondary" icon="pi pi-times"
+						onclick="PF('deleteProductDialog').hide()" />
+				</p:confirmDialog>
+			</div>
+		</h:form>
+	</body>
+</f:view>
+</html>

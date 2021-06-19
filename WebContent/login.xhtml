@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head>
+<f:view>
+	<f:metadata>
+		<f:viewAction action="#{clientsView.check(clientsView.client.name)}" />
+	</f:metadata>
+	<body>
+
+		<h:form>
+			<p:growl id="growl" showDetail="true" />
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+			<center style="margin-top: 10%;">
+				<p:panelGrid columns="1" layout="grid">
+					<p:inputText placeholder="E-posta"
+						value="#{clientsView.client.email}" style="width:240px;"
+						required="true" requiredMessage="E-posta alanını doldurunuz" />
+					<p:password placeholder="Parola"
+						value="#{clientsView.client.password}" toggleMask="true"
+						style="width:240px;" required="true"
+						requiredMessage="Parola alanını doldurunuz" />
+				</p:panelGrid>
+				<p:panelGrid columns="2" styleClass="ui-noborder">
+					<p:button value="Kaydol" icon="pi pi-user"
+						styleClass="ui-button-flat" outcome="register.xhtml"
+						style="font-weight:lighter;font-size:large;font-family:Times New Roman TUR;border-color:Blue;border-width:medium;font-style:italic;border-style:double;text-align:center;" />
+					<p:commandButton value="Giriş yap"
+						action="#{clientsView.loginControl()}" icon="pi pi-check"
+						update="growl" styleClass="ui-button-flat"
+						style="font-weight:lighter;font-size:large;font-family:Times New Roman TUR;border-color:Blue;border-width:medium;font-style:italic;border-style:double;text-align:center;" />
+
+				</p:panelGrid>
+			</center>
+		</h:form>
+
+	</body>
+</f:view>
+</html>

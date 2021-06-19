@@ -1,0 +1,142 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<f:view>
+
+	<f:metadata>
+		<f:viewAction action="#{clientsView.check(clientsView.client.name)}" />
+	</f:metadata>
+	<h:head></h:head>
+
+	<body>
+
+		<p:growl id="growl" showDetail="true" />
+
+		<h:form>
+
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+			<center style="margin-top: 10%;">
+
+
+				<p:wizard>
+
+					<p:tab id="personal" title="Kişisel Bilgiler">
+						<p:panel header="Kişisel Bilgiler">
+							<p:messages />
+							<p:panelGrid layout="grid" columns="1">
+								<p:inputText placeholder="Ad"
+									value="#{clientsView.client2.name}" required="true"
+									requiredMessage="Ad alanını doldurunuz" style="width:240px;" />
+								<p:inputText placeholder="Soyad"
+									value="#{clientsView.client2.surName}" required="true"
+									requiredMessage="Soyad alanını doldurunuz" style="width:240px;" />
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="contact" title="İletişim ve parola">
+						<p:panel header="İletişim ve parola">
+							<p:messages />
+							<p:panelGrid layout="grid" columns="1">
+
+								<p:inputText placeholder="Telefon"
+									value="#{clientsView.client2.telephoneNumber}"
+									style="width:240px;" maxlength="11" required="true"
+									requiredMessage="Telefon alanını doldurunuz" />
+
+								<p:inputText id="email" placeholder="E-posta"
+									value="#{clientsView.client2.email}"
+									validatorMessage="e-posta adresi geçerli değil" required="true"
+									requiredMessage="E-posta alanını doldurunuz"
+									style="width:240px;">
+									<f:validateRegex
+										pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+								</p:inputText>
+
+								<p:password placeholder="Parola" toggleMask="true"
+									value="#{clientsView.client2.password}" style="width:240px;"
+									required="true" requiredMessage="Parola alanını doldurunuz"
+									feedback="true" inline="true" />
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="adress" title="Adres bilgileri">
+						<p:panel header="Adres bilgileri">
+							<p:messages />
+
+							<h:panelGrid columns="1">
+
+								<p:selectOneMenu id="city"
+									value="#{clientsView.client2.adress.city}" style="width:240px"
+									required="true" requiredMessage="Şehir seçiniz">
+									<p:ajax listener="#{clientsView.onCityChange}"
+										update="district" />
+									<f:selectItem itemLabel="Şehir Seçin" itemValue=""
+										noSelectionOption="true" />
+									<f:selectItems value="#{clientsView.cities}" />
+								</p:selectOneMenu>
+
+								<p:selectOneMenu id="district"
+									value="#{clientsView.client2.adress.district}"
+									style="width:240px" required="true"
+									requiredMessage="İlçe seçiniz">
+									<f:selectItem itemLabel="İlçe Seçin" itemValue=""
+										noSelectionOption="true" />
+									<f:selectItems value="#{clientsView.districties}" />
+								</p:selectOneMenu>
+
+								<p:inputText placeholder="Mahalle" required="true"
+									value="#{clientsView.client2.adress.neighborhood}"
+									requiredMessage="Mahalle alanını doldurunuz"
+									style="width:240px" />
+								<p:inputText placeholder="Cadde/Sokak" required="true"
+									value="#{clientsView.client2.adress.street}"
+									requiredMessage="Cadde/Sokak alanını doldurunuz"
+									style="width:240px" />
+								<p:inputText placeholder="Bina no" required="true"
+									value="#{clientsView.client2.adress.buildingNumber}"
+									requiredMessage="Bina no alanını doldurunuz"
+									style="width:240px" />
+							</h:panelGrid>
+							<h:panelGrid columns="2">
+								<p:inputText placeholder="Kat" required="true"
+									value="#{clientsView.client2.adress.floorNumber}"
+									requiredMessage="Kat alanını doldurunuz" style="width:118px" />
+								<p:inputText placeholder="Daire" required="true"
+									value="#{clientsView.client2.adress.apartmentNumber}"
+									requiredMessage="Daire alanını doldurunuz" style="width:118px" />
+							</h:panelGrid>
+
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="confirm" title="Bilgiler">
+						<p:panel header="Bilgileri Doğrulama">
+							<pre style="text-align: left;">Ad:      #{clientsView.client2.name}</pre>
+							<pre style="text-align: left;">Soyad:   #{clientsView.client2.surName}</pre>
+							<pre style="text-align: left;">Telefon: #{clientsView.client2.telephoneNumber}</pre>
+							<pre style="text-align: left;">E-posta: #{clientsView.client2.email}</pre>
+							<pre style="text-align: left;">Adres:   #{clientsView.client2.adress.neighborhood} Mahallesi #{clientsView.client2.adress.street} Sokak/Cadde 
+         No:#{clientsView.client2.adress.buildingNumber} Kat:#{clientsView.client2.adress.floorNumber} Daire:#{clientsView.client2.adress.apartmentNumber}
+         #{clientsView.client2.adress.district}/#{clientsView.client2.adress.city}</pre>
+						</p:panel>
+						<p:commandButton value="Kaydol" action="#{clientsView.add()}"
+							update="growl" process="@this" />
+					</p:tab>
+
+				</p:wizard>
+			</center>
+
+		</h:form>
+	</body>
+</f:view>
+</html>

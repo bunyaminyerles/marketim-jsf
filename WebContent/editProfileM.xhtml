@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<f:view>
+
+	<f:metadata>
+		<f:viewAction action="#{managerView.checkNull(managerView.manager.name)}" />
+	</f:metadata>
+	<h:head></h:head>
+
+	<body>
+
+		<p:growl id="growl" showDetail="true" />
+
+		<h:form>
+
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+			<center style="margin-top: 10%;">
+
+
+				<p:wizard>
+
+					<p:tab id="personal" title="Kişisel Bilgiler">
+						<p:panel header="Kişisel Bilgiler">
+							<p:messages />
+							<p:panelGrid layout="grid" columns="1">
+								<p:inputText placeholder="Ad"
+									value="#{managerView.manager.name}" required="true" disabled="true"
+									requiredMessage="Ad alanını doldurunuz" style="width:240px;" />
+								<p:inputText placeholder="Soyad"
+									value="#{managerView.manager.surName}" required="true" disabled="true"
+									requiredMessage="Soyad alanını doldurunuz" style="width:240px;" />
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+					<p:tab id="contact" title="İletişim ve parola">
+						<p:panel header="İletişim ve parola">
+							<p:messages />
+							<p:panelGrid layout="grid" columns="1">
+
+								<p:inputText placeholder="Telefon"
+									value="#{managerView.manager.telephoneNumber}"
+									style="width:240px;" maxlength="11" required="true"
+									requiredMessage="Telefon alanını doldurunuz" />
+
+								<p:inputText id="email" placeholder="E-posta"
+									value="#{managerView.manager.email}"
+									validatorMessage="e-posta adresi geçerli değil" required="true"
+									requiredMessage="E-posta alanını doldurunuz"
+									style="width:240px;">
+									<f:validateRegex
+										pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]" />
+								</p:inputText>
+
+								<p:password placeholder="Parola" toggleMask="true"
+									value="#{managerView.manager.password}" style="width:240px;"
+									required="true" requiredMessage="Parola alanını doldurunuz"
+									feedback="true" inline="true" />
+							</p:panelGrid>
+						</p:panel>
+					</p:tab>
+
+
+					<p:tab id="confirm" title="Bilgiler">
+						<p:panel header="Bilgileri Doğrulama">
+							<pre style="text-align: left;">Ad:      #{managerView.manager.name}</pre>
+							<pre style="text-align: left;">Soyad:   #{managerView.manager.surName}</pre>
+							<pre style="text-align: left;">Telefon: #{managerView.manager.telephoneNumber}</pre>
+							<pre style="text-align: left;">E-posta: #{managerView.manager.email}</pre>
+						</p:panel>
+						<p:commandButton value="Güncelle" action="#{managerView.update()}"
+							update="growl" process="@this" />
+					</p:tab>
+
+				</p:wizard>
+			</center>
+
+		</h:form>
+	</body>
+</f:view>
+</html>

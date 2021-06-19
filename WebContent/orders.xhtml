@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="primeflex.css" />
+</h:head>
+<f:view>
+	<f:metadata>
+		<f:viewAction
+			action="#{clientsView.checkNull(clientsView.client.name)}" />
+	</f:metadata>
+	<body>
+		<p:growl id="messages" showDetail="true" life="2000" />
+
+		<h:form id="form">
+
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+			<div class="card">
+				<p:menubar>
+					<p:menuitem value="Ana Sayfa"
+						action="homepage.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-home" />
+					<p:menuitem value="Kategoriler"
+						action="category.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Hakımızda"
+						action="about.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-info-circle" />
+
+
+					<p:menuitem style="margin-left:100px;width:500px;">
+						<div class="p-col-12 p-md-4">
+							<div class="ui-inputgroup" style="width: 500px;">
+								<p:inputText placeholder="Ürün ara" value="#{searchView.search}"
+									style="width:425px;" />
+								<p:commandButton icon="pi pi-search"
+									action="#{searchView.search()}" styleClass="ui-button-warning"
+									style="width:40px;" />
+							</div>
+						</div>
+					</p:menuitem>
+
+					<f:facet name="options">
+						<p:button icon="pi pi-shopping-cart" outcome="basket.xhtml"
+							styleClass="ui-button-info" style="margin:5px;" />
+						<p:button value="Giriş Yap" icon="pi pi-fw pi-sign-in"
+							styleClass="ui-button-info" outcome="login.xhtml"
+							rendered="#{clientsView.client.name == null}" />
+
+
+					</f:facet>
+					<p:submenu icon="pi pi-user" styleClass=""
+						label="#{clientsView.client.name} #{clientsView.client.surName}"
+						style="float:right" rendered="#{clientsView.client.name != null}">
+						<p:menuitem value="Bilgilerimi düzenle" icon="pi pi-user-edit" />
+						<p:menuitem value="Siparişlerim"
+							action="orders.xhtml?faces-redirect=true" icon="pi pi-tags" />
+						<p:menuitem value="Çıkış yap"
+							action="#{clientsView.logoutControl()}" update="messages form"
+							process="@this" icon="pi pi-fw pi-sign-out" />
+					</p:submenu>
+
+				</p:menubar>
+			</div>
+			<hr size="10" style="background-color: Black;" />
+
+			<p:dataView id="dataview" var="order"
+				value="#{orderInfoView.findOrders(clientsView.client)}" rows="12"
+				paginator="true" rowsPerPageTemplate="6,12,16"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				gridIcon="pi pi-th-large" listIcon="pi pi-bars" layout="list"
+				gridRowStyleClass="p-lg-6 p-xl-4" flex="true">
+
+				<p:dataViewListItem>
+
+					<div style="width: 100%;">
+						<div style="width: 50%; height: 100px; float: left;">
+							<center>
+								Sipariş numarası:#{order.id} <br /> Sipariş
+								zamanı:#{order.orderDate} <br /> <i
+									class="pi pi-send product-category-icon" /> <span
+									class="product-category">#{order.orderState}</span>
+							</center>
+						</div>
+						<div style="margin-left: 50%; height: 100px;">
+							<center>
+								<h:outputText value="#{order.totalPayment} ₺"
+									styleClass="product-price" />
+								<br /> <br />
+								<p:commandButton
+									styleClass="rounded-button ui-button-success ui-button-outlined"
+									update="form" icon="pi pi-search"
+									action="#{orderInfoView.orderSelection(order.id)}" />
+							</center>
+						</div>
+					</div>
+				</p:dataViewListItem>
+			</p:dataView>
+		</h:form>
+	</body>
+</f:view>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="primeflex.css" />
+</h:head>
+<f:view>
+	<f:metadata>
+		<f:viewAction
+			action="#{managerView.checkNull(managerView.manager.name)}" />
+	</f:metadata>
+	<body>
+		<p:growl id="messages" showDetail="true" life="1000" />
+		<h:form id="form">
+
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+
+			<div class="card">
+				<p:menubar>
+					<p:menuitem value="Ana Sayfa"
+						action="managerHomepage.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-home" />
+					<p:menuitem value="Kategori İşlemleri"
+						action="managerCategory.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Ürün İşlemleri"
+						action="managerProduct.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Kurye İşlemleri"
+						action="managerCourier.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Satış İşlemleri"
+						action="managerSales.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+
+					<f:facet name="options">
+					</f:facet>
+					<p:submenu icon="pi pi-user" styleClass=""
+						label="#{managerView.manager.name} #{managerView.manager.surName}"
+						style="float:right" rendered="#{managerView.manager.name != null}">
+						<p:menuitem value="Bilgilerimi düzenle"
+							action="editProfileM.xhtml?faces-redirect=true"
+							icon="pi pi-user-edit" />
+						<p:menuitem value="Çıkış yap"
+							action="#{managerView.logoutControl()}" update="messages form"
+							process="@this" icon="pi pi-fw pi-sign-out" />
+					</p:submenu>
+
+				</p:menubar>
+			</div>
+			<hr size="10" style="background-color: Black;" />
+
+
+			<div class="card crud-demo">
+
+				<p:dataTable id="dt-order" widgetVar="dtOrder" var="order"
+					value="#{orderInfoView.list()}" reflow="true"
+					styleClass="products-table" paginator="true" rows="10"
+					rowSelectMode="add" paginatorPosition="bottom">
+
+					<p:column headerText="İd" sortBy="#{order.id}"
+						filterBy="#{order.id}">
+						<h:outputText value="#{order.id}" />
+					</p:column>
+					<p:column headerText="Müşteri"
+						sortBy="#{order.client.name} #{order.client.surName}"
+						filterBy="#{order.client.name} #{order.client.surName}">
+						<h:outputText value="#{order.client.name} #{order.client.surName}" />
+					</p:column>
+					<p:column headerText="Kurye"
+						sortBy="#{order.courier.name} #{order.courier.surName}"
+						filterBy="#{order.courier.name} #{order.courier.surName}">
+						<h:outputText
+							value="#{order.courier.name} #{order.courier.surName}" />
+					</p:column>
+					<p:column headerText="Durumu" sortBy="#{order.orderState}"
+						filterBy="#{order.orderState}">
+						<h:outputText value="#{order.orderState}" />
+					</p:column>
+					<p:column headerText="Tarih" sortBy="#{order.orderDate}"
+						filterBy="#{order.orderDate}">
+						<h:outputText value="#{order.orderDate}" />
+					</p:column>
+					<p:column headerText="Tutar" sortBy="#{order.totalPayment}"
+						filterBy="#{order.totalPayment}">
+						<h:outputText value="#{order.totalPayment}" />
+					</p:column>
+					<p:column>
+						<p:commandButton icon="pi pi-search"
+							update=":form:manage-product-content"
+							oncomplete="PF('manageProductDialog').show()"
+							styleClass="rounded-button ui-button-info ui-button-outlined"
+							process="@this">
+							<f:setPropertyActionListener value="#{order}"
+								target="#{orderInfoView.order}" />
+							<p:resetInput target=":form:manage-product-content" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+				<p:dialog header="Sipariş Detayları" showEffect="fade" modal="true"
+					widgetVar="manageProductDialog" responsive="true">
+					<p:outputPanel id="manage-product-content" class="ui-fluid">
+						<p:outputPanel style="height:500px;width:800px;"
+							rendered="#{orderInfoView.order.orderState!=null}">
+							
+							<p:dataView id="dataview" var="orderDetails"
+								value="#{orderDetailView.list(orderInfoView.order.id)}"
+								rows="12" paginator="true"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+								gridIcon="pi pi-th-large" listIcon="pi pi-bars" layout="grid"
+								gridRowStyleClass="p-lg-6 p-xl-4" flex="true">
+								<p:dataViewGridItem>
+									<center>
+										<div class="product-grid-item card border-1">
+											<div class="product-grid-item-top">
+												<div>
+													<i class="pi pi-tag product-category-icon" /> <span
+														class="product-category">#{orderDetails.product.category.categoryName}
+													</span>
+												</div>
+											</div>
+										</div>
+										<div class="product-grid-item-content">
+											<p:graphicImage value="#{orderDetails.product.photo}"
+												stream="false" style="width:150px;height:150px;" />
+											<div class="product-name">#{orderDetails.product.productName}</div>
+											<div class="product-description">#{orderDetails.product.pcsUnit}</div>
+											<h:outputText value="#{orderDetails.product.salePrice} ₺"
+												styleClass="product-price">
+											</h:outputText>
+
+										</div>
+										<div class="product-grid-item-bottom">
+											<h:outputText value="#{orderDetails.quantity} adet" />
+										</div>
+									</center>
+								</p:dataViewGridItem>
+							</p:dataView>
+						</p:outputPanel>
+					</p:outputPanel>
+				</p:dialog>
+
+
+			</div>
+		</h:form>
+	</body>
+</f:view>
+</html>

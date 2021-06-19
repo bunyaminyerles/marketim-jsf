@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="primeflex.css" />
+</h:head>
+<f:view>
+	<f:metadata>
+		<f:viewAction
+			action="#{courierView.checkNull(courierView.courier.name)}" />
+	</f:metadata>
+	<body>
+		<p:growl id="messages" showDetail="true" life="2000" />
+
+		<h:form id="form">
+
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+			<div class="card">
+				<p:menubar>
+
+					<f:facet name="options">
+
+					</f:facet>
+					<p:submenu icon="pi pi-user" styleClass=""
+						label="#{courierView.courier.name} #{courierView.courier.surName}"
+						style="float:right" rendered="#{courierView.courier.name != null}">
+						<p:menuitem value="Bilgilerimi düzenle"
+							action="editProfileC.xhtml?faces-redirect=true"
+							icon="pi pi-user-edit" />
+						<p:menuitem value="Çıkış yap"
+							action="#{courierView.logoutControl()}" update="messages form"
+							process="@this" icon="pi pi-fw pi-sign-out" />
+					</p:submenu>
+				</p:menubar>
+			</div>
+			<hr size="10" style="background-color: Black;" />
+
+			<p:dataView id="dataview" var="order"
+				rendered="#{orderInfoView.orderControl(courierView.courier).id==null}"
+				value="#{orderInfoView.findOrders()}" rows="12" paginator="true"
+				rowsPerPageTemplate="6,12,16"
+				paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				gridIcon="pi pi-th-large" listIcon="pi pi-bars" layout="list"
+				gridRowStyleClass="p-lg-6 p-xl-4" flex="true">
+
+				<p:dataViewListItem>
+
+					<div style="width: 100%;">
+						<div style="width: 50%; height: 100px; float: left;">
+							<center>
+								Sipariş numarası:#{order.id} <br /> Sipariş
+								zamanı:#{order.orderDate} <br /> <i
+									class="pi pi-send product-category-icon" /> <span
+									class="product-category">#{order.orderState}</span>
+							</center>
+						</div>
+						<div style="margin-left: 50%; height: 100px;">
+							<center>
+								<h:outputText value="#{order.totalPayment} ₺"
+									styleClass="product-price" />
+								<br /> <br />
+								<p:commandButton value="Siparişi götür"
+									styleClass="rounded-button ui-button-success ui-button-outlined"
+									update="form messages" icon="pi pi-check-circle"
+									action="#{orderInfoView.courierChose(order.id,courierView.courier)}" />
+							</center>
+						</div>
+					</div>
+				</p:dataViewListItem>
+			</p:dataView>
+			<p:dataView id="dataview2" var="order"
+				rendered="#{orderInfoView.orderControl(courierView.courier).id!=null}"
+				value="#{orderInfoView.orderControl(courierView.courier)}">
+
+				<p:dataViewListItem>
+					<div style="width: 100%;">
+						<div style="width: 50%; float: left;">
+							<center>
+								Sipariş numarası:#{order.id} <br /> Sipariş
+								zamanı:#{order.orderDate} <br /> <i
+									class="pi pi-send product-category-icon" /> <span
+									class="product-category">#{order.orderState}</span>
+									<br />
+								<h:outputText value="#{order.totalPayment} ₺"
+									styleClass="product-price" />
+								<br /> <br /> Sipariş Durumu <br />
+
+								<p:commandButton value="Yolda"
+									styleClass="rounded-button ui-button-info ui-button-outlined"
+									update="form messages" icon="pi pi-map"
+									action="#{orderInfoView.stateUpdate(order.id,'Yolda')}" />
+									&nbsp;
+								<p:commandButton value="Teslim Edildi"
+									styleClass="rounded-button ui-button-success ui-button-outlined"
+									update="form messages" icon="pi pi-check-circle"
+									action="#{orderInfoView.stateUpdate(order.id,'Teslim Edildi')}" />
+									&nbsp;
+								<p:commandButton value="İptal Edildi"
+									styleClass="rounded-button ui-button-danger ui-button-outlined"
+									update="form messages" icon="pi pi-times"
+									action="#{orderInfoView.stateUpdate(order.id,'İptal Edildi')}" />
+							</center>
+						</div>
+						<div></div>
+						<div style="margin-left: 50%;">
+							<center>
+								Müşteri Bilgileri <br /> <br /> #{order.client.name}
+								#{order.client.surName} <br /> #{order.client.telephoneNumber}<br />
+								<br /> #{order.client.adress.neighborhood} Mahallesi
+								#{order.client.adress.street} Sokak/Cadde <br />
+								No:#{order.client.adress.buildingNumber}
+								Kat:#{order.client.adress.floorNumber}
+								Daire:#{order.client.adress.apartmentNumber}<br />
+								#{order.client.adress.district}/#{order.client.adress.city}
+							</center>
+						</div>
+						<p:dataView id="dataview2" var="orderD"
+							value="#{orderDetailView.list(order.id)}" rows="12"
+							paginator="true"
+							paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+							gridIcon="pi pi-th-large" listIcon="pi pi-bars" layout="grid"
+							gridRowStyleClass="p-lg-6 p-xl-4" flex="true">
+
+
+
+							<p:dataViewGridItem>
+								<center>
+									<div class="product-grid-item card border-1">
+										<div class="product-grid-item-top">
+											<div>
+												<i class="pi pi-tag product-category-icon" /> <span
+													class="product-category">#{orderD.product.category.categoryName}
+												</span>
+											</div>
+										</div>
+									</div>
+									<div class="product-grid-item-content">
+										<p:graphicImage value="#{orderD.product.photo}" stream="false"
+											style="width:150px;height:150px;" />
+										<div class="product-name">#{orderD.product.productName}</div>
+										<div class="product-description">#{orderD.product.pcsUnit}</div>
+										<h:outputText value="#{basket.product.salePrice} ₺"
+											styleClass="product-price">
+										</h:outputText>
+									</div>
+									<div class="product-grid-item-bottom">
+										<h:outputText value="#{orderD.quantity} adet" />
+									</div>
+								</center>
+							</p:dataViewGridItem>
+						</p:dataView>
+					</div>
+				</p:dataViewListItem>
+			</p:dataView>
+		</h:form>
+	</body>
+</f:view>
+</html>

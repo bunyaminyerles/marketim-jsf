@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<link type="text/css" rel="stylesheet" href="primeflex.css" />
+</h:head>
+<f:view>
+	<f:metadata>
+		<f:viewAction
+			action="#{managerView.checkNull(managerView.manager.name)}" />
+	</f:metadata>
+	<body>
+		<p:growl id="messages" showDetail="true" life="1000" />
+		<h:form id="form">
+
+			<center
+				style="color: Black; white-space: normal; font-weight: lighter; font-size: 50px; font-family: Times New Roman TUR; font-style: oblique; text-align: center;">
+				Marketim</center>
+			<hr size="10" style="background-color: Black;" />
+			<div class="card">
+				<p:menubar>
+					<p:menuitem value="Ana Sayfa"
+						action="managerHomepage.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-home" />
+					<p:menuitem value="Kategori İşlemleri"
+						action="managerCategory.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Ürün İşlemleri"
+						action="managerProduct.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Kurye İşlemleri"
+						action="managerCourier.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+					<p:menuitem value="Satış İşlemleri"
+						action="managerSales.xhtml?faces-redirect=true"
+						icon="pi pi-fw pi-list" />
+
+					<f:facet name="options">
+					</f:facet>
+					<p:submenu icon="pi pi-user" styleClass=""
+						label="#{managerView.manager.name} #{managerView.manager.surName}"
+						style="float:right" rendered="#{managerView.manager.name != null}">
+						<p:menuitem value="Bilgilerimi düzenle"
+							action="editProfileM.xhtml?faces-redirect=true"
+							icon="pi pi-user-edit" />
+						<p:menuitem value="Çıkış yap"
+							action="#{managerView.logoutControl()}" update="messages form"
+							process="@this" icon="pi pi-fw pi-sign-out" />
+					</p:submenu>
+
+				</p:menubar>
+			</div>
+			<hr size="10" style="background-color: Black;" />
+
+			<div>
+
+				<div
+					style="background-color: #00339980; width: 1480px; height: 820px; z-index: 10; position: absolute; top: 188px; left: 18px;">
+
+				</div>
+				<div
+					style="z-index: -999; top: 174px; left: 8px; position: absolute;">
+					<p:imageSwitch effect="fade" id="fadeEffect">
+						<ui:repeat value="#{imagesView.images}" var="imagepng"
+							id="fadeEffectImages">
+							<p:graphicImage value="/resources/images/#{imagepng}"
+								width="1502" height="844" />
+						</ui:repeat>
+					</p:imageSwitch>
+				</div>
+			</div>
+		</h:form>
+	</body>
+</f:view>
+</html>
