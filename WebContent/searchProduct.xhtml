@@ -98,9 +98,11 @@
 							</h:outputText>
 						</div>
 						<div class="product-grid-item-bottom">
-							<p:commandButton type="button" value="Sepete ekle"
-								icon="pi pi-shopping-cart" disabled="#{product.stock == '0'}">
-							</p:commandButton>
+							<p:commandButton value="Sepete ekle"
+								rendered="#{clientsView.client.name != null}"
+								action="#{basketView.add(product,clientsView.client)}"
+								update="messages" icon="pi pi-shopping-cart"
+								disabled="#{product.stock == '0'}" />
 						</div>
 					</center>
 				</p:dataViewGridItem>
